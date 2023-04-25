@@ -1,0 +1,70 @@
+{
+  "name": "ma-ya-ma",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "author": {
+    "name": "lnkkerst",
+    "email": "lnkkerst04@gmail.com",
+    "url": "https://lnkkerst.me"
+  },
+  "license": "MIT",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "web:dev": "vite",
+    "web:build": "vue-tsc --noEmit && vite build",
+    "web:preview": "vite preview",
+    "tauri": "tauri",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.2.0",
+    "vue": "^3.2.45"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.38.5",
+    "@tauri-apps/cli": "^1.2.3",
+    "@types/node": "^18.7.10",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vitejs/plugin-vue-jsx": "^3.0.1",
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
+    "husky": ">=7",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.8",
+    "typescript": "^4.9.5",
+    "vite": "^4.2.1",
+    "vue-tsc": "^1.0.11"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "none",
+    "arrowParens": "avoid",
+    "printWidth": 80,
+    "useTabs": false,
+    "quoteProps": "as-needed",
+    "bracketSpacing": true,
+    "rangeStart": 0,
+    "endOfLine": "lf",
+    "htmlWhitespaceSensitivity": "ignore"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@antfu",
+      "prettier"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,vue}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{html,md,yaml,json,css,scss,sass,less}": "prettier --write",
+    "*.rs": "rustfmt",
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write",
+    "*.{cc,cpp,h,hpp,c}": "clang-format -i"
+  }
+}

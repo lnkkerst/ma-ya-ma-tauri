@@ -1,0 +1,4 @@
+CompileFlags:
+  Add:
+    - "--include-directory=./src-tauri/"
+    - "--include-directory=./src-tauri/target/cxxbridge/"
