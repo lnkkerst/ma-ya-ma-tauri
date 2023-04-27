@@ -1,0 +1,8 @@
+.tile {
+  transform: var(--tile-transform);
+  transition: all 0.3s;
+
+  &:hover {
+    transform: var(--tile-transform) scale(1.05);
+  }
+}
