@@ -1,10 +1,57 @@
+import path from 'node:path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import Icons from 'unplugin-icons/vite';
+import Pages from 'vite-plugin-pages';
+import Layouts from 'vite-plugin-vue-layouts';
+import unocss from 'unocss/vite';
+import {
+  presetAttributify,
+  presetIcons,
+  presetTagify,
+  presetTypography,
+  presetUno,
+  presetWebFonts,
+  transformerDirectives
+} from 'unocss';
+import transformerAttributifyJsx from '@unocss/transformer-attributify-jsx-babel';
+import type { Theme } from 'unocss/preset-uno';
+import { extendCatppuccin } from 'unocss-catppuccin-colours';
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [vue(), vueJsx()],
+  plugins: [
+    vue(),
+    vueJsx(),
+    unocss<Theme>({
+      presets: [
+        presetUno(),
+        presetIcons(),
+        presetWebFonts({
+          provider: 'google',
+          fonts: {
+            'jetbrains-mono': ['JetBrains Mono'],
+            'fira-code': ['FiraCode']
+          }
+        }),
+        presetTypography(),
+        presetAttributify(),
+        presetTagify()
+      ],
+      transformers: [transformerAttributifyJsx(), transformerDirectives()],
+      theme: {
+        colors: extendCatppuccin()
+      }
+    }),
+    Pages({
+      extensions: ['vue', 'tsx', 'jsx']
+    }),
+    Layouts({
+      extensions: ['ts', 'js', 'tsx', 'jsx']
+    }),
+    Icons({})
+  ],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   // prevent vite from obscuring rust errors
@@ -24,5 +71,10 @@ export default defineConfig(async () => ({
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_DEBUG
+  },
+  resolve: {
+    alias: {
+      '~/': `${path.resolve(__dirname, 'src')}/`
+    }
   }
 }));
