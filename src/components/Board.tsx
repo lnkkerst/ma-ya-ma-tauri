@@ -1,39 +1,23 @@
-import { defineComponent, reactive, ref } from 'vue';
-import { variants } from '@catppuccin/palette';
+import { defineComponent, ref } from 'vue';
 import Tile from './Tile';
 import styles from './Board.module.scss';
+import useGameState from '~/state/game';
 import type { Tile as TileType } from '~/types';
 
 export default defineComponent({
   setup() {
-    const rows = ref(15);
+    const _rows = ref(15);
     const columns = ref(15);
-    const tiles = reactive<TileType[]>([
-      {
-        row: 1,
-        column: 1,
-        index: 0,
-        exposed: true,
-        keyword: {
-          content: 'let',
-          color: variants.latte.mauve.hex
-        }
-      },
-      {
-        row: 1,
-        column: 1,
-        index: 1,
-        exposed: true,
-        keyword: {
-          content: 'mut',
-          color: variants.latte.mauve.hex
-        }
-      }
-    ]);
+    const gameState = useGameState();
+
+    async function handleClick(_tile: TileType) {
+      // const { row, column, index } = tile;
+      // console.log(await invoke('click_tile', { index, row, column }));
+    }
 
     return () => (
       <div aspect-square w="9/10" mx="auto" mt="10">
-        {tiles.map(tile => (
+        {gameState.value.board.map(tile => (
           <div
             absolute
             aspect-square
@@ -48,6 +32,7 @@ export default defineComponent({
                 50 * (tile.row - 1) - tile.index * 6
               }%)`
             }}
+            onClick={() => handleClick(tile)}
           >
             <Tile
               text={tile.keyword.content}

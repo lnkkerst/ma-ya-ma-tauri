@@ -1,6 +1,8 @@
 import { useWindowSize } from '@vueuse/core';
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { RouterView } from 'vue-router';
+
+// @ts-expect-error no declaration file
 import CanvasNest from 'canvas-nest.js';
 import { variants } from '@catppuccin/palette';
 import { appSize } from '~/consts';
