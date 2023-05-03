@@ -1,13 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-#[cxx::bridge]
-mod ffi {
-    unsafe extern "C++" {
-        include!("include/mayama.h");
-        fn add(x: i32, y: i32) -> i32;
-    }
-}
+use ma_ya_ma::ffi;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]

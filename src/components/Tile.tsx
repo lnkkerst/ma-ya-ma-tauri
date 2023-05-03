@@ -14,6 +14,10 @@ export default defineComponent({
     backgroundColor: {
       type: String,
       default: variants.latte.base.hex
+    },
+    lineColor: {
+      type: String,
+      default: variants.mocha.crust.hex
     }
   },
   setup(props) {
@@ -31,7 +35,7 @@ export default defineComponent({
           height="80"
           rx="8"
           fill={variants.latte.surface2.hex}
-          stroke={variants.mocha.crust.hex}
+          stroke={props.lineColor}
           stroke-width="3"
         ></rect>
         <rect
@@ -41,7 +45,7 @@ export default defineComponent({
           height="80"
           rx="8"
           fill={props.backgroundColor}
-          stroke={variants.mocha.crust.hex}
+          stroke={props.lineColor}
           stroke-width="3"
         ></rect>
         <text

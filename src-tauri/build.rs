@@ -1,11 +1,10 @@
+#[allow(unused_must_use)]
 fn main() {
     cxx_build::CFG.include_prefix = "";
-    cxx_build::bridge("src/main.rs")
-        .file("src/mayama.cc")
-        .flag_if_supported("-std=c++14")
-        .compile("ma-ya-ma");
+    cxx_build::bridge("src/lib.rs");
     tauri_build::build();
-    println!("cargo:rerun-if-changed=src/main.rs");
-    println!("cargo:rerun-if-changed=include/mayama.h");
-    println!("cargo:rerun-if-changed=src/mayama.cc");
+
+    println!("cargo:rerun-if-changed=src/lib.rs");
+    println!("cargo:rustc-link-lib=static=ma_ya_ma");
+    println!(r"cargo:rustc-link-search=native=../build/");
 }
