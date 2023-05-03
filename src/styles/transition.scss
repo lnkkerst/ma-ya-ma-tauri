@@ -1,0 +1,17 @@
+.tile-bounce-enter-active {
+  animation: tile-bounce-in 0.3s;
+}
+.tile-bounce-leave-active {
+  animation: tile-bounce-in 0.3s reverse;
+}
+@keyframes tile-bounce-in {
+  0% {
+    transform: var(--tile-transform) scale(0) rotate(180deg);
+  }
+  90% {
+    transform: var(--tile-transform) scale(1.25) rotate(0deg);
+  }
+  100% {
+    transform: var(--tile-transform) scale(1) rotate(0deg);
+  }
+}

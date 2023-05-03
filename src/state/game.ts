@@ -13,9 +13,10 @@ export interface GameState {
 const gameState = ref<GameState>({
   status: 'preparing',
   score: 0,
-  tiles: [],
-  board: [
+  board: [],
+  tiles: [
     {
+      id: '12312313342',
       row: 1,
       column: 1,
       index: 0,
@@ -23,9 +24,13 @@ const gameState = ref<GameState>({
       keyword: {
         content: 'let',
         color: variants.latte.mauve.hex
-      }
+      },
+      onBuffer: false,
+      dropped: false,
+      selected: false
     },
     {
+      id: '1231231334dede',
       row: 1,
       column: 1,
       index: 1,
@@ -33,7 +38,24 @@ const gameState = ref<GameState>({
       keyword: {
         content: 'mut',
         color: variants.latte.mauve.hex
-      }
+      },
+      onBuffer: false,
+      dropped: false,
+      selected: false
+    },
+    {
+      id: '1231231334dadanb',
+      row: 1,
+      column: 1,
+      index: 1,
+      exposed: true,
+      keyword: {
+        content: 'mut',
+        color: variants.latte.mauve.hex
+      },
+      onBuffer: false,
+      dropped: false,
+      selected: false
     }
   ],
   buffer: []

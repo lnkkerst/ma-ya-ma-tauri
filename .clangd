@@ -2,3 +2,4 @@ CompileFlags:
   Add:
     - "--include-directory=./src-tauri/"
     - "--include-directory=./src-tauri/target/cxxbridge/"
+    - "-std=c++14"
