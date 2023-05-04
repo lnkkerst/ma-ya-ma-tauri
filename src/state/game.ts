@@ -23,7 +23,9 @@ const gameState = ref<GameState>({
       exposed: true,
       keyword: {
         content: 'let',
-        color: variants.latte.mauve.hex
+        color: variants.latte.mauve.hex,
+        backgroundColor: '',
+        type: 'normal'
       },
       onBuffer: false,
       dropped: false,
@@ -37,7 +39,9 @@ const gameState = ref<GameState>({
       exposed: true,
       keyword: {
         content: 'mut',
-        color: variants.latte.mauve.hex
+        color: variants.latte.mauve.hex,
+        backgroundColor: '',
+        type: 'normal'
       },
       onBuffer: false,
       dropped: false,
@@ -51,7 +55,9 @@ const gameState = ref<GameState>({
       exposed: true,
       keyword: {
         content: 'mut',
-        color: variants.latte.mauve.hex
+        color: variants.latte.mauve.hex,
+        backgroundColor: '',
+        type: 'normal'
       },
       onBuffer: false,
       dropped: false,

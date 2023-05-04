@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(ma_ya_ma)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_STANDARD 14)
 
 set(CARGO_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src-tauri)
 set(CARGO_TARGET_DIR ${CARGO_SOURCE_DIR}/target)

@@ -10,13 +10,33 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn add(x: i32, y: i32) -> i32 {
-    ffi::add(x, y)
+fn test() -> ffi::Keyword {
+    ffi::Keyword {
+        content: "let".into(),
+        keyword_type: "normal".into(),
+        color: "red".into(),
+        background_color: "black".into(),
+    }
+}
+
+#[tauri::command]
+fn handle_click_tile(tile: Vec<ffi::Tile>) {
+    println!("{:?}", tile);
+}
+
+#[tauri::command]
+fn init_game(tiles: Vec<ffi::Tile>) {
+    println!("{:?}", tiles);
 }
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, add])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            test,
+            handle_click_tile,
+            init_game
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
