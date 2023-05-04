@@ -1,10 +1,29 @@
+use std::{env, path::Path};
+
+use glob::glob;
+
 #[allow(unused_must_use)]
 fn main() {
     cxx_build::CFG.include_prefix = "";
-    cxx_build::bridge("src/lib.rs");
+    let mut cxx_bridge = cxx_build::bridge("src/lib.rs");
+    if let Ok(v) = env::var("CMAKE_TARGET_LIBRARY") {
+        println!("cargo:rustc-link-lib=static=ma_ya_ma");
+        println!(
+            "cargo:rustc-link-search=native={}",
+            Path::new(&v).parent().unwrap().to_str().unwrap()
+        );
+    } else {
+        cxx_bridge
+            .files(
+                glob("../src-cpp/*.cc")
+                    .unwrap()
+                    .map(|p| p.unwrap().to_str().unwrap().to_string())
+                    .collect::<Vec<_>>(),
+            )
+            .flag_if_supported("-std=c++14")
+            .compile("ma_ya_ma");
+    }
     tauri_build::build();
 
     println!("cargo:rerun-if-changed=src/lib.rs");
-    println!("cargo:rustc-link-lib=static=ma_ya_ma");
-    println!(r"cargo:rustc-link-search=native=../build/");
 }
