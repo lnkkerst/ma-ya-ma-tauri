@@ -1,5 +1,5 @@
 #include "include/Keyword.h"
 
-Keyword::Keyword() {}
+Keyword::Keyword() = default;
 
-Keyword::~Keyword() {}
+Keyword::~Keyword() = default;

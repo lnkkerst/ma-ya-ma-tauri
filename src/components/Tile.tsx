@@ -35,7 +35,7 @@ export default defineComponent({
           height="80"
           rx="8"
           fill={variants.latte.surface2.hex}
-          stroke={props.lineColor}
+          stroke={props.lineColor || variants.mocha.crust.hex}
           stroke-width="3"
         ></rect>
         <rect
@@ -44,8 +44,8 @@ export default defineComponent({
           width="80"
           height="80"
           rx="8"
-          fill={props.backgroundColor}
-          stroke={props.lineColor}
+          fill={props.backgroundColor || variants.latte.base.hex}
+          stroke={props.lineColor || variants.mocha.crust.hex}
           stroke-width="3"
         ></rect>
         <text
@@ -53,8 +53,8 @@ export default defineComponent({
           y="50%"
           text-anchor="middle"
           dominant-baseline="middle"
-          stroke={props.color}
-          fill={props.color}
+          stroke={props.color || variants.latte.text.hex}
+          fill={props.color || variants.latte.text.hex}
           class={[
             {
               'font-jetbrains-mono':

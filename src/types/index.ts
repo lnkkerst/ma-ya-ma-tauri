@@ -1,8 +1,8 @@
 export interface Keyword {
   content: string;
-  type?: 'normal' | 'wildcard';
-  color?: string;
-  backgroundColor?: string;
+  type: 'normal' | 'wildcard';
+  color: string;
+  backgroundColor: string;
 }
 
 export interface Tile {

@@ -1,5 +1,6 @@
 import { Transition, computed, defineComponent, ref } from 'vue';
 import { variants } from '@catppuccin/palette';
+import { invoke } from '@tauri-apps/api';
 import Tile from './Tile';
 import styles from './Board.module.scss';
 import useGameState from '~/state/game';
@@ -21,6 +22,7 @@ export default defineComponent({
         tile.selected = false;
       });
       tile.selected = true;
+      await invoke('handle_click_tile', { tile: [tile] });
     }
 
     return () => (
