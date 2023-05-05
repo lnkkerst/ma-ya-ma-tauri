@@ -83,6 +83,7 @@ pub mod ffi {
 
     unsafe extern "C++" {
         include!("include/mayama.hpp");
+        include!("include/Game.hpp");
 
         type Game;
         fn get_status() -> GameStatus;
