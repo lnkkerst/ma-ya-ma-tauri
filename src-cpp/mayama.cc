@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "include/mayama.h"
+#include "include/mayama.hpp"
 #include "src/lib.rs.h"
 
 Game game;
@@ -83,3 +83,9 @@ Tiles get_tiles() {
 }
 
 void init_game() { game.init_game(); }
+
+std::unique_ptr<ClickTileResult> Game::handle_click_tile(const Tile &tile) {}
+
+std::unique_ptr<ClickTileResult> handle_click_tile(const Tile &tile) {
+  return game.handle_click_tile(tile);
+}
