@@ -78,5 +78,6 @@ pub mod ffi {
         fn load_tiles(level: &PreLevel) -> ();
         fn load_theme(theme: &Theme) -> ();
         fn get_tiles() -> Tiles;
+        fn init_game() -> ();
     }
 }

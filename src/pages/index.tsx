@@ -1,16 +1,21 @@
 import { invoke } from '@tauri-apps/api';
-import { defineComponent } from 'vue';
+import { defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import Board from '~/components/Board';
 import useGameState from '~/state/game';
+import type { Tile } from '~/types';
 
-export default defineComponent({
-  setup() {
+export default defineAsyncComponent({
+  suspensible: false,
+  async loader() {
     const route = useRoute();
     const levelName = route.params.level || '1';
     const gameState = useGameState();
-    invoke('load_theme_from_builtin', { themeName: 'default' });
-    invoke('load_level_from_builtin', { levelName });
+    await invoke('load_theme_from_builtin', { themeName: 'default' });
+    gameState.value.tiles = (await invoke('load_level_from_builtin', {
+      levelName
+    })) as Tile[];
+
     return () => (
       <>
         <Board></Board>

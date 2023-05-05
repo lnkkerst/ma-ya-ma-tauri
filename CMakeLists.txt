@@ -53,6 +53,8 @@ file(GLOB CARGO_SOURCE_FILES ${CARGO_SOURCE_DIR}/src/*.rs)
 
 add_custom_command(
   OUTPUT ${CARGO_BINARY_FILE}
+  COMMAND corepack enable
+  COMMAND pnpm i
   COMMAND ${CMAKE_COMMAND} -E env CMAKE_TARGET_LIBRARY=$<TARGET_FILE:ma_ya_ma>
           ${TAURI_BUILD_COMMAND}
   DEPENDS ${CARGO_SOURCE_FILES} ma_ya_ma
