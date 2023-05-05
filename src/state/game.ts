@@ -1,4 +1,3 @@
-import { variants } from '@catppuccin/palette';
 import { ref } from 'vue';
 import type { Tile } from '~/types';
 
@@ -8,63 +7,16 @@ export interface GameState {
   buffer: Tile[];
   score: number;
   status: 'preparing' | 'running' | 'win' | 'lose';
+  tilesMap: Record<string, Tile>;
 }
 
 const gameState = ref<GameState>({
   status: 'preparing',
   score: 0,
   board: [],
-  tiles: [
-    {
-      id: '12312313342',
-      row: 1,
-      column: 1,
-      index: 0,
-      exposed: true,
-      keyword: {
-        content: 'let',
-        color: variants.latte.mauve.hex,
-        backgroundColor: '',
-        type: 'normal'
-      },
-      onBuffer: false,
-      dropped: false,
-      selected: false
-    },
-    {
-      id: '1231231334dede',
-      row: 1,
-      column: 1,
-      index: 1,
-      exposed: true,
-      keyword: {
-        content: 'mut',
-        color: variants.latte.mauve.hex,
-        backgroundColor: '',
-        type: 'normal'
-      },
-      onBuffer: false,
-      dropped: false,
-      selected: false
-    },
-    {
-      id: '1231231334dadanb',
-      row: 1,
-      column: 1,
-      index: 1,
-      exposed: true,
-      keyword: {
-        content: 'mut',
-        color: variants.latte.mauve.hex,
-        backgroundColor: '',
-        type: 'normal'
-      },
-      onBuffer: false,
-      dropped: false,
-      selected: false
-    }
-  ],
-  buffer: []
+  tiles: [],
+  buffer: [],
+  tilesMap: {}
 });
 
 export default function useGameState() {

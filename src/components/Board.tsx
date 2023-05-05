@@ -4,7 +4,7 @@ import { invoke } from '@tauri-apps/api';
 import Tile from './Tile';
 import styles from './Board.module.scss';
 import useGameState from '~/state/game';
-import type { Tile as TileType } from '~/types';
+import type { ClickTileResult, Tile as TileType } from '~/types';
 
 export default defineComponent({
   setup() {
@@ -12,17 +12,16 @@ export default defineComponent({
     const columns = ref(15);
     const gameState = useGameState();
     const tileWidth = computed(() => ((100 / columns.value) * 2 * 9) / 10);
-    const selectedTiles = computed(() =>
-      gameState.value.tiles.filter(tile => tile.selected)
-    );
 
     async function handleClick(tile: TileType) {
-      tile.onBuffer = !tile.onBuffer;
-      selectedTiles.value.forEach(tile => {
-        tile.selected = false;
+      const res: ClickTileResult = await invoke('handle_click_tile', { tile });
+      res.diffs.forEach(diff => {
+        const tile = gameState.value.tilesMap[diff.id];
+        diff.diff.forEach(record => {
+          const [field, value] = record.split(':');
+          (tile as any)[field] = JSON.parse(value);
+        });
       });
-      tile.selected = true;
-      await invoke('handle_click_tile', { tile: [tile] });
     }
 
     return () => (

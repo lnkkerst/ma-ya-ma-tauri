@@ -16,3 +16,7 @@ export interface Tile {
   dropped: boolean;
   selected: boolean;
 }
+
+export interface ClickTileResult {
+  diffs: { id: string; diff: string[] }[];
+}

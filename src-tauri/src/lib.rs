@@ -3,7 +3,7 @@ pub mod theme;
 
 #[cxx::bridge]
 pub mod ffi {
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     struct Keyword {
         content: String,
         #[serde(rename = "type")]
@@ -14,7 +14,7 @@ pub mod ffi {
         background_color: String,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     struct Tile {
         id: String,
         row: i32,
@@ -28,31 +28,31 @@ pub mod ffi {
         selected: bool,
     }
 
-    #[derive(Debug)]
+    #[derive(Debug, Serialize, Deserialize, Clone)]
     struct Tiles {
         value: Vec<Tile>,
     }
 
-    #[derive(Debug, Serialize, Deserialize)]
+    #[derive(Debug, Serialize, Deserialize, Clone)]
     pub struct PreTile {
         column: i32,
         row: i32,
         index: i32,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     pub struct PreLevel {
         id: String,
         name: String,
         tiles: Vec<PreTile>,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     struct KeywordGroup {
         contents: Vec<String>,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     pub struct Theme {
         id: String,
         name: String,
@@ -60,13 +60,13 @@ pub mod ffi {
         groups: Vec<KeywordGroup>,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     pub struct TileDiff {
         id: String,
         diff: Vec<String>,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     pub struct ClickTileResult {
         diffs: Vec<TileDiff>,
     }

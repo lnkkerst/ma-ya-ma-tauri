@@ -1,7 +1,12 @@
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
+#include <iterator>
+#include <memory>
+#include <string>
 
 #include "include/Game.hpp"
+#include "rust/cxx.h"
 #include "src/lib.rs.h"
 
 void Game::load_tiles(const PreLevel &level) {
@@ -48,6 +53,9 @@ void Game::init_game() {
   std::srand(std::time(nullptr));
   this->tiles.clear();
   this->tiles_map.clear();
+  this->buf_tiles.clear();
+  this->tile_diffs.clear();
+  this->dropped_tiles.clear();
   auto keywords = this->theme->keywords;
   for (const auto &pre_tile : this->pre_tiles) {
     Tile tile;
@@ -71,4 +79,65 @@ void Game::init_game() {
     }
   }
   this->status = GameStatus::Running;
+}
+
+std::unique_ptr<ClickTileResult> Game::handle_click_tile(const Tile &tile) {
+  ClickTileResult res;
+  if (tile.on_buffer) {
+    this->handle_click_buf_tile(tile);
+  } else {
+    this->handle_click_board_tile(tile);
+  }
+  auto diffs = this->tile_diffs.send();
+  for (const auto &i : diffs) {
+    res.diffs.emplace_back(i);
+  }
+  return std::make_unique<ClickTileResult>(res);
+}
+
+// TODO:
+void Game::handle_click_buf_tile(const Tile &tile) {}
+
+// TODO:
+void Game::handle_click_board_tile(const Tile &tile) {
+  if (tile.exposed) {
+    append_to_buf(tile);
+  }
+}
+
+void Game::append_to_buf(const std::string &tile_id) {
+  auto tile = this->tiles_map[tile_id];
+  if (tile == nullptr) {
+    return;
+  }
+
+  [&]() {
+    for (auto it = this->buf_tiles.begin(); it != this->buf_tiles.end(); ++it) {
+      if ((*it)->keyword.content == tile->keyword.content) {
+        tile->column = (*it)->column;
+        this->tile_diffs.push_back(std::string(tile->id), "column",
+                                   tile->column);
+
+        for (auto itr = it; it != this->buf_tiles.end(); ++itr) {
+          (*itr)->column += 2;
+          this->tile_diffs.push_back(std::string((*itr)->id), "column",
+                                     (*itr)->column);
+        }
+
+        this->buf_tiles.insert(it, tile);
+        return;
+      }
+    }
+
+    tile->column = this->buf_tiles.size() * 2 + 1;
+    this->tile_diffs.push_back(std::string(tile->id), "column", tile->column);
+    this->buf_tiles.emplace_back(tile);
+  }();
+
+  tile->on_buffer = true;
+  this->tile_diffs.push_back(std::string(tile->id), "onBuffer", true);
+}
+
+void Game::append_to_buf(const Tile &tile) {
+  this->append_to_buf(std::string(tile.id));
 }

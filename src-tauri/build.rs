@@ -26,6 +26,7 @@ fn main() {
             .iter()
             .for_each(|f| println!("cargo:rerun-if-changed={}", f));
     }
+
     tauri_build::build();
 
     println!("cargo:rerun-if-changed=src/lib.rs");

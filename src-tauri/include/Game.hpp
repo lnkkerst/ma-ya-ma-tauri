@@ -2,6 +2,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "include/TileDiffList.hpp"
 #include "rust/cxx.h"
 
 enum class GameStatus : std::uint8_t;
@@ -11,6 +12,7 @@ struct Tile;
 struct Tiles;
 struct Theme;
 struct ClickTileResult;
+struct TileDiff;
 
 class Game {
 public:
@@ -20,11 +22,6 @@ public:
   Game &operator=(Game &&) = default;
   Game &operator=(const Game &) = default;
   ~Game() = default;
-
-  std::unordered_map<std::string, std::shared_ptr<Tile>> tiles_map;
-  std::vector<std::shared_ptr<Tile>> tiles;
-  std::vector<PreTile> pre_tiles;
-  std::shared_ptr<Theme> theme;
 
   GameStatus get_status() const noexcept;
   void load_tiles(const PreLevel &level);
@@ -36,10 +33,20 @@ public:
   GameStatus status;
 
 private:
+  int score;
+  std::unordered_map<std::string, std::shared_ptr<Tile>> tiles_map;
+  std::vector<std::shared_ptr<Tile>> tiles;
+  std::vector<PreTile> pre_tiles;
+  std::shared_ptr<Theme> theme;
+
   std::vector<std::shared_ptr<Tile>> board_tiles;
   std::vector<std::shared_ptr<Tile>> buf_tiles;
+  std::vector<std::shared_ptr<Tile>> dropped_tiles;
 
-  void handle_click_buf_tile(const Tile &tile, rust::Vec<rust::String> &diffs);
-  void handle_click_board_tile(const Tile &tile,
-                               rust::Vec<rust::String> &diffs);
+  TileDiffList tile_diffs;
+
+  void handle_click_buf_tile(const Tile &tile);
+  void handle_click_board_tile(const Tile &tile);
+  void append_to_buf(const Tile &tile);
+  void append_to_buf(const std::string &tile_id);
 };
