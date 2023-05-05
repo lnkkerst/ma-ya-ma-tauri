@@ -1,0 +1,134 @@
+{
+  "id": "builtin-default",
+  "name": "default",
+  "keywords": [
+    {
+      "content": "class",
+      "type": "wildcard",
+      "color": "#d20f39",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "if",
+      "type": "normal",
+      "color": "#8839ef",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "else",
+      "type": "normal",
+      "color": "#8839ef",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "public",
+      "type": "normal",
+      "color": "#df8e1d",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "private",
+      "type": "normal",
+      "color": "#df8e1d",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "protected",
+      "type": "normal",
+      "color": "#df8e1d",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "struct",
+      "type": "normal",
+      "color": "#1e66f5",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "enum",
+      "type": "normal",
+      "color": "#1e66f5",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "union",
+      "type": "normal",
+      "color": "#1e66f5",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "switch",
+      "type": "normal",
+      "color": "#40a02b",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "case",
+      "type": "normal",
+      "color": "#40a02b",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "default",
+      "type": "normal",
+      "color": "#40a02b",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "do",
+      "type": "normal",
+      "color": "#7287fd",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "while",
+      "type": "normal",
+      "color": "#7287fd",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "for",
+      "type": "normal",
+      "color": "#7287fd",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "float",
+      "type": "normal",
+      "color": "#fe640b",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "char",
+      "type": "normal",
+      "color": "#fe640b",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "int",
+      "type": "normal",
+      "color": "#fe640b",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "long",
+      "type": "normal",
+      "color": "#fe640b",
+      "backgroundColor": "#eff1f5"
+    },
+    {
+      "content": "double",
+      "type": "normal",
+      "color": "#fe640b",
+      "backgroundColor": "#eff1f5"
+    }
+  ],
+  "groups": [
+    { "contents": ["if", "else"] },
+    { "contents": ["public", "private", "protected"] },
+    { "contents": ["struct", "union", "enum"] },
+    { "contents": ["switch", "case", "default"] },
+    { "contents": ["do", "while", "for"] },
+    { "contents": ["float", "char", "int", "long", "double"] }
+  ]
+}

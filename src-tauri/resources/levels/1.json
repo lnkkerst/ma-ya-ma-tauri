@@ -1,0 +1,8 @@
+{
+  "id": "builtin-1",
+  "name": "02",
+  "tiles": [
+    { "column": 1, "row": 1, "index": 1 },
+    { "column": 3, "row": 1, "index": 1 }
+  ]
+}
