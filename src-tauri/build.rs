@@ -13,15 +13,18 @@ fn main() {
             Path::new(&v).parent().unwrap().to_str().unwrap()
         );
     } else {
+        let files = glob("../src-cpp/*.cc")
+            .unwrap()
+            .map(|p| p.unwrap().to_str().unwrap().to_string())
+            .collect::<Vec<_>>();
+
         cxx_bridge
-            .files(
-                glob("../src-cpp/*.cc")
-                    .unwrap()
-                    .map(|p| p.unwrap().to_str().unwrap().to_string())
-                    .collect::<Vec<_>>(),
-            )
+            .files(&files)
             .flag_if_supported("-std=c++14")
             .compile("ma_ya_ma");
+        files
+            .iter()
+            .for_each(|f| println!("cargo:rerun-if-changed={}", f));
     }
     tauri_build::build();
 

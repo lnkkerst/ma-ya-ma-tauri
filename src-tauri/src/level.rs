@@ -19,3 +19,7 @@ impl PreLevel {
         .map_err(|_e| anyhow::anyhow!("Failed to load level"))
     }
 }
+
+pub fn get_builtin_levels() -> Vec<String> {
+    BUILTIN_LEVELS.keys().map(|s| s.to_string()).collect()
+}

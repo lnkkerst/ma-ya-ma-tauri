@@ -18,6 +18,7 @@ fn handle_click_tile(tile: Vec<ffi::Tile>) {
 fn load_level_from_builtin(level_name: String) -> Vec<ffi::Tile> {
     let pre_level = level::PreLevel::from_builtin(&level_name).expect("Failed to load level");
     ffi::load_tiles(&pre_level);
+    ffi::init_game();
     ffi::get_tiles().value
 }
 

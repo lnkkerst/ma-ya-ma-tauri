@@ -6,7 +6,7 @@
 #include "include/mayama.h"
 #include "src/lib.rs.h"
 
-std::shared_ptr<Game> game;
+Game game;
 
 void Game::load_tiles(const PreLevel &level) {
   this->pre_tiles.clear();
@@ -17,7 +17,7 @@ void Game::load_tiles(const PreLevel &level) {
 }
 
 void Game::load_theme(const Theme &theme) {
-  this->theme = std::shared_ptr<Theme>(new Theme(theme));
+  this->theme = std::make_shared<Theme>(theme);
 }
 
 // TODO: return GAME STATUS
@@ -71,14 +71,15 @@ void Game::init_game() {
   this->status = GameStatus::Running;
 }
 
-void load_tiles(const PreLevel &level) { game->load_tiles(level); }
+void load_tiles(const PreLevel &level) { game.load_tiles(level); }
 
-void load_theme(const Theme &theme) { game->load_theme(theme); }
-
-GameStatus get_status() { return game->get_status(); }
+void load_theme(const Theme &theme) { game.load_theme(theme); }
+GameStatus get_status() { return game.get_status(); }
 
 Tiles get_tiles() {
   Tiles res;
-  res.value = game->get_tiles();
+  res.value = game.get_tiles();
   return res;
 }
+
+void init_game() { game.init_game(); }
