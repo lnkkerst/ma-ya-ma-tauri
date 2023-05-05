@@ -13,6 +13,7 @@ struct Tile;
 struct Tiles;
 struct Theme;
 struct ClickTileResult;
+struct TileDiff;
 
 GameStatus get_status();
 

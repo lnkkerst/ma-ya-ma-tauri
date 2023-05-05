@@ -15,6 +15,9 @@ export default defineAsyncComponent({
     gameState.value.tiles = (await invoke('load_level_from_builtin', {
       levelName
     })) as Tile[];
+    gameState.value.tiles.forEach(tile => {
+      gameState.value.tilesMap[tile.id] = tile;
+    });
 
     return () => (
       <>

@@ -10,7 +10,9 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn handle_click_tile(tile: Vec<ffi::Tile>) {}
+fn handle_click_tile(tile: ffi::Tile) -> ffi::ClickTileResult {
+    ffi::handle_click_tile(&tile).as_ref().unwrap().clone()
+}
 
 #[tauri::command]
 fn load_level_from_builtin(level_name: String) -> Result<Vec<ffi::Tile>, String> {
