@@ -10,22 +10,22 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn handle_click_tile(tile: Vec<ffi::Tile>) {
-    println!("{:?}", tile);
-}
+fn handle_click_tile(tile: Vec<ffi::Tile>) {}
 
 #[tauri::command]
-fn load_level_from_builtin(level_name: String) -> Vec<ffi::Tile> {
-    let pre_level = level::PreLevel::from_builtin(&level_name).expect("Failed to load level");
+fn load_level_from_builtin(level_name: String) -> Result<Vec<ffi::Tile>, String> {
+    let pre_level =
+        level::PreLevel::from_builtin(&level_name).map_err(|_e| "Failed to load level")?;
     ffi::load_tiles(&pre_level);
     ffi::init_game();
-    ffi::get_tiles().value
+    Ok(ffi::get_tiles().value)
 }
 
 #[tauri::command]
-fn load_theme_from_builtin(theme_name: String) {
-    let theme = theme::Theme::from_builtin(&theme_name).expect("Failed to load theme");
+fn load_theme_from_builtin(theme_name: String) -> Result<(), String> {
+    let theme = theme::Theme::from_builtin(&theme_name).map_err(|_e| "Failed to load theme")?;
     ffi::load_theme(&theme);
+    Ok(())
 }
 
 fn main() {

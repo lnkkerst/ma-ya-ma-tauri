@@ -60,6 +60,17 @@ pub mod ffi {
         groups: Vec<KeywordGroup>,
     }
 
+    #[derive(Debug, Deserialize, Serialize)]
+    pub struct TileDiff {
+        id: String,
+        diff: Vec<String>,
+    }
+
+    #[derive(Debug, Deserialize, Serialize)]
+    pub struct ClickTileResult {
+        diffs: Vec<TileDiff>,
+    }
+
     enum GameEvent {
         ClickTile,
     }
@@ -71,7 +82,7 @@ pub mod ffi {
     }
 
     unsafe extern "C++" {
-        include!("include/mayama.h");
+        include!("include/mayama.hpp");
 
         type Game;
         fn get_status() -> GameStatus;
@@ -79,5 +90,6 @@ pub mod ffi {
         fn load_theme(theme: &Theme) -> ();
         fn get_tiles() -> Tiles;
         fn init_game() -> ();
+        fn handle_click_tile(tile: &Tile) -> UniquePtr<ClickTileResult>;
     }
 }

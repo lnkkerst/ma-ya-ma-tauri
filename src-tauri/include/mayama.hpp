@@ -14,6 +14,7 @@ struct PreLevel;
 struct Tile;
 struct Tiles;
 struct Theme;
+struct ClickTileResult;
 
 class Game {
 public:
@@ -34,6 +35,8 @@ public:
   void load_theme(const Theme &theme);
   void init_game();
   rust::Vec<Tile> get_tiles() const;
+  std::unique_ptr<ClickTileResult> handle_click_tile(const Tile &tile);
+
   GameStatus status;
 
 private:
@@ -50,3 +53,5 @@ void init_game();
 Tiles get_tiles();
 
 std::string gen_random(const int len);
+
+std::unique_ptr<ClickTileResult> handle_click_tile(const Tile &tile);
