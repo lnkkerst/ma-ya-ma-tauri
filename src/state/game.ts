@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { GameStatus } from '~/types';
 import type { Tile } from '~/types';
 
 export interface GameState {
@@ -6,13 +7,13 @@ export interface GameState {
   board: Tile[];
   buffer: Tile[];
   score: number;
-  status: 'preparing' | 'running' | 'win' | 'lose';
+  status: GameStatus;
   tilesMap: Record<string, Tile>;
   movingTile: string;
 }
 
 const gameState = ref<GameState>({
-  status: 'preparing',
+  status: GameStatus.Running,
   score: 0,
   board: [],
   tiles: [],

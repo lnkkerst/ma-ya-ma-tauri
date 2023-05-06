@@ -3,6 +3,7 @@ pub use crate::ffi::{Keyword, PreLevel, PreTile, Tile};
 static BUILTIN_LEVELS: phf::Map<&'static str, &'static str> = phf::phf_map! {
     "1" => include_str!("../resources/levels/1.json"),
     "2" => include_str!("../resources/levels/2.json"),
+    "3" => include_str!("../resources/levels/3.json"),
 };
 
 impl PreLevel {

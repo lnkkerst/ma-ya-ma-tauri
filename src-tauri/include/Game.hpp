@@ -48,6 +48,7 @@ private:
   std::unordered_set<std::string> board_tiles_set;
   std::unordered_set<std::string> buf_tiles_set;
   std::unordered_set<std::string> dropped_tiles_set;
+  std::unordered_set<std::string> selected_tiles_set;
 
   TileDiffList tile_diffs;
 
@@ -58,6 +59,9 @@ private:
   void append_to_buf(const Tile &tile);
   void append_to_buf(const std::string &tile_id);
   void build_shield();
-  void drop_tiles();
+  void drop_paired_tiles();
+  void drop_all_buf_tiles();
+  void drop_tile(std::shared_ptr<Tile> tile);
   void arrange_buf_tiles(int move_delay = 0);
+  void clear_selected();
 };
