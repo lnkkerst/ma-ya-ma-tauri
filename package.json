@@ -26,9 +26,11 @@
     "@vueuse/head": "^1.1.26",
     "@vueuse/motion": "2.0.0-beta.12",
     "canvas-nest.js": "^2.0.4",
+    "gsap": "^3.11.5",
     "lodash-es": "^4.17.21",
     "vue": "^3.2.45",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vuetify": "^3.2.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.38.5",

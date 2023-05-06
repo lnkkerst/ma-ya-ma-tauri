@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "include/TileDiffList.hpp"
 #include "include/TileShieldTree.hpp"
@@ -44,6 +45,9 @@ private:
   std::vector<std::shared_ptr<Tile>> board_tiles;
   std::vector<std::shared_ptr<Tile>> buf_tiles;
   std::vector<std::shared_ptr<Tile>> dropped_tiles;
+  std::unordered_set<std::string> board_tiles_set;
+  std::unordered_set<std::string> buf_tiles_set;
+  std::unordered_set<std::string> dropped_tiles_set;
 
   TileDiffList tile_diffs;
 
@@ -55,4 +59,5 @@ private:
   void append_to_buf(const std::string &tile_id);
   void build_shield();
   void drop_tiles();
+  void arrange_buf_tiles(int move_delay = 0);
 };

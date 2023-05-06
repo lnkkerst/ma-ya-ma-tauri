@@ -11,26 +11,38 @@ void TileDiffList::push_back(const TileDiff &diff) {
 }
 
 void TileDiffList::push_back(const std::string &id, const std::string &field,
-                             int value) {
+                             int value, int delay) {
   TileDiff diff;
   diff.id = id;
-  diff.diff.emplace_back(field + ":" + std::to_string(value));
+  auto s = field + ":" + std::to_string(value);
+  if (delay) {
+    s += ":" + std::to_string(delay);
+  }
+  diff.diff.emplace_back(s);
   this->push_back(diff);
 }
 
 void TileDiffList::push_back(const std::string &id, const std::string &field,
-                             std::string &value) {
+                             std::string &value, int delay) {
   TileDiff diff;
   diff.id = id;
-  diff.diff.emplace_back(field + ":\"" + value + "\"");
+  auto s = field + ":\"" + value + "\"";
+  if (delay) {
+    s += ":" + std::to_string(delay);
+  }
+  diff.diff.emplace_back(s);
   this->push_back(diff);
 }
 
 void TileDiffList::push_back(const std::string &id, const std::string &field,
-                             bool value) {
+                             bool value, int delay) {
   TileDiff diff;
   diff.id = id;
-  diff.diff.emplace_back(field + ":" + (value ? "true" : "false"));
+  auto s = field + ":" + (value ? "true" : "false");
+  if (delay) {
+    s += ":" + std::to_string(delay);
+  }
+  diff.diff.emplace_back(s);
   this->push_back(diff);
 }
 

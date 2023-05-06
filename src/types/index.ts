@@ -20,3 +20,9 @@ export interface Tile {
 export interface ClickTileResult {
   diffs: { id: string; diff: string[] }[];
 }
+
+export enum GameStatus {
+  Running,
+  Winned,
+  Losed
+}

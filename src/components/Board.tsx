@@ -1,4 +1,4 @@
-import { Transition, computed, defineComponent, ref } from 'vue';
+import { Transition, computed, defineComponent, nextTick, ref } from 'vue';
 import { variants } from '@catppuccin/palette';
 import { invoke } from '@tauri-apps/api';
 import Tile from './Tile';
@@ -7,33 +7,40 @@ import useGameState from '~/state/game';
 import type { ClickTileResult, Tile as TileType } from '~/types';
 
 export default defineComponent({
-  setup() {
-    const rows = ref(15);
-    const columns = ref(15);
+  emits: {
+    clickTile(_tile: TileType) {
+      return true;
+    }
+  },
+  setup(_props, { emit }) {
+    const rows = ref(14);
+    const columns = ref(14);
     const gameState = useGameState();
     const tileWidth = computed(() => ((100 / columns.value) * 2 * 9) / 10);
 
-    async function handleClick(tile: TileType) {
+    async function handleClickTile(tile: TileType) {
       const res: ClickTileResult = await invoke('handle_click_tile', { tile });
       res.diffs.forEach(diff => {
         const tile = gameState.value.tilesMap[diff.id];
         diff.diff.forEach(record => {
-          const [field, value] = record.split(':');
-          if (field === 'onBuffer') {
-            gameState.value.movingTile = tile.id;
-            setTimeout(() => (gameState.value.movingTile = ''), 350);
+          const [field, value, delay] = record.split(':');
+          const op = () => {
+            if (field === 'onBuffer') {
+              (tile as any).moving = 114514;
+              setTimeout(() => ((tile as any).moving = undefined), 350);
+            }
+            nextTick(() => {
+              (tile as any)[field] = JSON.parse(value);
+            });
+          };
+          if (delay) {
+            setTimeout(op, parseInt(delay));
+          } else {
+            op();
           }
-          (tile as any)[field] = JSON.parse(value);
         });
       });
-
-      await updateScore();
-    }
-    async function updateScore() {
-      const newScore = (await invoke('get_score')) as number;
-      if (gameState.value.score !== newScore) {
-        gameState.value.score = newScore;
-      }
+      emit('clickTile', tile);
     }
 
     return () => (
@@ -51,9 +58,8 @@ export default defineComponent({
                   style={{
                     width: `${tileWidth.value}%`,
                     zIndex:
-                      tile.id === gameState.value.movingTile
-                        ? 114514
-                        : tile.index * 10000 + tile.row * 100 + tile.index,
+                      (tile as any).moving ??
+                      tile.index * 10000 + tile.row * 100 + tile.index,
                     filter: `grayscale(${tile.exposed ? '0' : '100%'})`,
                     '--tile-transform': !tile.onBuffer
                       ? `translate(${50 * (tile.column - 1)}%, ${
@@ -63,7 +69,7 @@ export default defineComponent({
                           (rows.value / 2 + 2) * 100
                         }%)`
                   }}
-                  onClick={() => handleClick(tile)}
+                  onClick={() => handleClickTile(tile)}
                   key={tile.id}
                 >
                   <Tile
