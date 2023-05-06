@@ -6,6 +6,7 @@
 #include <string>
 
 #include "include/Game.hpp"
+#include "include/utils.hpp"
 #include "rust/cxx.h"
 #include "src/lib.rs.h"
 
@@ -21,8 +22,7 @@ void Game::load_theme(const Theme &theme) {
   this->theme = std::make_shared<Theme>(theme);
 }
 
-// TODO: return GAME STATUS
-GameStatus Game::get_status() const noexcept { return GameStatus::Running; }
+GameStatus Game::get_status() const noexcept { return this->status; }
 
 rust::Vec<Tile> Game::get_tiles() const {
   rust::Vec<Tile> res;
@@ -32,30 +32,20 @@ rust::Vec<Tile> Game::get_tiles() const {
   return res;
 }
 
-std::string gen_random(const int len = 64) {
-  static const char alphanum[] = "0123456789"
-                                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                 "abcdefghijklmnopqrstuvwxyz";
-  std::string tmp_s;
-  tmp_s.reserve(len);
-
-  for (int i = 0; i < len; ++i) {
-    tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
-  }
-
-  return tmp_s;
-}
-
 void Game::init_game() {
   if (this->theme == nullptr) {
     throw "theme not load";
   }
+
   std::srand(std::time(nullptr));
+
   this->tiles.clear();
   this->tiles_map.clear();
   this->buf_tiles.clear();
   this->tile_diffs.clear();
   this->dropped_tiles.clear();
+  this->shield_tree.clear();
+
   auto keywords = this->theme->keywords;
   for (const auto &pre_tile : this->pre_tiles) {
     Tile tile;
@@ -69,6 +59,7 @@ void Game::init_game() {
     tile.selected = false;
     auto id = gen_random();
     tile.id = id;
+
     auto tile_ptr = std::make_shared<Tile>(tile);
     this->tiles.emplace_back(tile_ptr);
     this->tiles_map[id] = tile_ptr;
@@ -77,16 +68,29 @@ void Game::init_game() {
     } else {
       this->board_tiles.emplace_back(tile_ptr);
     }
+    this->shield_tree.insert(*tile_ptr);
+    tile_ptr->exposed = this->shield_tree.check_exposed(*tile_ptr);
   }
+
   this->status = GameStatus::Running;
+  this->shield_tree.init();
+  this->build_shield();
+  this->tile_diffs.send();
 }
 
-std::unique_ptr<ClickTileResult> Game::handle_click_tile(const Tile &tile) {
+std::unique_ptr<ClickTileResult> Game::handle_click_tile(const Tile &ori_tile) {
   ClickTileResult res;
-  if (tile.on_buffer) {
-    this->handle_click_buf_tile(tile);
+  auto it = this->tiles_map.find(std::string(ori_tile.id));
+  if (it == this->tiles_map.end()) {
+    return std::make_unique<ClickTileResult>(res);
+  }
+
+  auto tile = it->second;
+
+  if (tile->on_buffer) {
+    this->handle_click_buf_tile(*tile);
   } else {
-    this->handle_click_board_tile(tile);
+    this->handle_click_board_tile(*tile);
   }
   auto diffs = this->tile_diffs.send();
   for (const auto &i : diffs) {
@@ -106,19 +110,34 @@ void Game::handle_click_board_tile(const Tile &tile) {
 }
 
 void Game::append_to_buf(const std::string &tile_id) {
-  auto tile = this->tiles_map[tile_id];
-  if (tile == nullptr) {
+  auto it = this->tiles_map.find(tile_id);
+  if (it == this->tiles_map.end()) {
     return;
+  }
+  auto tile = it->second;
+
+  auto to_exposed = this->shield_tree.erase(*tile);
+  for (const auto &i : to_exposed) {
+    this->tile_diffs.push_back(i, "exposed", true);
+    this->tiles_map[i]->exposed = true;
   }
 
   [&]() {
     for (auto it = this->buf_tiles.begin(); it != this->buf_tiles.end(); ++it) {
       if ((*it)->keyword.content == tile->keyword.content) {
+        while (it != this->buf_tiles.end() &&
+               (*it)->keyword.content == tile->keyword.content) {
+          ++it;
+        }
+        if (it == this->buf_tiles.end()) {
+          break;
+        }
+
         tile->column = (*it)->column;
         this->tile_diffs.push_back(std::string(tile->id), "column",
                                    tile->column);
 
-        for (auto itr = it; it != this->buf_tiles.end(); ++itr) {
+        for (auto itr = it; itr != this->buf_tiles.end(); ++itr) {
           (*itr)->column += 2;
           this->tile_diffs.push_back(std::string((*itr)->id), "column",
                                      (*itr)->column);
@@ -136,8 +155,26 @@ void Game::append_to_buf(const std::string &tile_id) {
 
   tile->on_buffer = true;
   this->tile_diffs.push_back(std::string(tile->id), "onBuffer", true);
+  this->drop_tiles();
 }
 
 void Game::append_to_buf(const Tile &tile) {
   this->append_to_buf(std::string(tile.id));
+}
+
+int Game::get_score() const { return this->score; }
+
+void Game::build_shield() {
+  for (const auto &i : this->tiles) {
+    bool newVal = this->shield_tree.check_exposed(*i);
+    if (i->exposed != newVal) {
+      i->exposed = newVal;
+      this->tile_diffs.push_back(std::string(i->id), "exposed", newVal);
+    }
+  }
+}
+
+void Game::drop_tiles() {
+  std::unordered_map<std::string, int> cnt_single;
+  std::unordered_map<std::string, int> cnt_group;
 }

@@ -30,6 +30,16 @@ fn load_theme_from_builtin(theme_name: String) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+fn get_status() -> ffi::GameStatus {
+    ffi::get_status()
+}
+
+#[tauri::command]
+fn get_score() -> i32 {
+    ffi::get_score()
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -37,6 +47,8 @@ fn main() {
             handle_click_tile,
             load_level_from_builtin,
             load_theme_from_builtin,
+            get_status,
+            get_score
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

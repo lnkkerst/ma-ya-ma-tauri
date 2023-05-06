@@ -2,7 +2,14 @@
   transform: var(--tile-transform);
   transition: all 0.3s;
 
+  // &:hover {
+  //   transform: var(--tile-transform) scale(0.9);
+  // }
+}
+
+.tile-svg {
+  transition: all 0.2s;
   &:hover {
-    transform: var(--tile-transform) scale(1.05);
+    transform: scale(0.9);
   }
 }

@@ -25,6 +25,6 @@ void init_game();
 
 Tiles get_tiles();
 
-std::string gen_random(const int len);
-
 std::unique_ptr<ClickTileResult> handle_click_tile(const Tile &tile);
+
+int get_score();

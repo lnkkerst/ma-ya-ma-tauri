@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "include/TileDiffList.hpp"
+#include "include/TileShieldTree.hpp"
 #include "rust/cxx.h"
 
 enum class GameStatus : std::uint8_t;
@@ -29,6 +30,7 @@ public:
   void init_game();
   rust::Vec<Tile> get_tiles() const;
   std::unique_ptr<ClickTileResult> handle_click_tile(const Tile &tile);
+  int get_score() const;
 
   GameStatus status;
 
@@ -45,8 +47,12 @@ private:
 
   TileDiffList tile_diffs;
 
+  TileShieldTree shield_tree;
+
   void handle_click_buf_tile(const Tile &tile);
   void handle_click_board_tile(const Tile &tile);
   void append_to_buf(const Tile &tile);
   void append_to_buf(const std::string &tile_id);
+  void build_shield();
+  void drop_tiles();
 };

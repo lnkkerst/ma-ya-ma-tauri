@@ -25,3 +25,5 @@ void init_game() { game.init_game(); }
 std::unique_ptr<ClickTileResult> handle_click_tile(const Tile &tile) {
   return game.handle_click_tile(tile);
 }
+
+int get_score() { return game.get_score(); }

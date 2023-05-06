@@ -19,9 +19,21 @@ export default defineComponent({
         const tile = gameState.value.tilesMap[diff.id];
         diff.diff.forEach(record => {
           const [field, value] = record.split(':');
+          if (field === 'onBuffer') {
+            gameState.value.movingTile = tile.id;
+            setTimeout(() => (gameState.value.movingTile = ''), 350);
+          }
           (tile as any)[field] = JSON.parse(value);
         });
       });
+
+      await updateScore();
+    }
+    async function updateScore() {
+      const newScore = (await invoke('get_score')) as number;
+      if (gameState.value.score !== newScore) {
+        gameState.value.score = newScore;
+      }
     }
 
     return () => (
@@ -38,11 +50,14 @@ export default defineComponent({
                   class={[styles.tile]}
                   style={{
                     width: `${tileWidth.value}%`,
-                    zIndex: tile.index + 1000,
-                    filter: `grayscale(${tile.exposed ? '0' : '60%'})`,
+                    zIndex:
+                      tile.id === gameState.value.movingTile
+                        ? 114514
+                        : tile.index * 10000 + tile.row * 100 + tile.index,
+                    filter: `grayscale(${tile.exposed ? '0' : '100%'})`,
                     '--tile-transform': !tile.onBuffer
                       ? `translate(${50 * (tile.column - 1)}%, ${
-                          50 * (tile.row - 1) - tile.index * 6
+                          50 * (tile.row - 1)
                         }%)`
                       : `translate(${50 * (tile.column - 1)}%, ${
                           (rows.value / 2 + 2) * 100
@@ -66,7 +81,8 @@ export default defineComponent({
                       'transition',
                       'duration-100',
                       'h-100/80',
-                      'w-100/80'
+                      'w-100/80',
+                      styles['tile-svg']
                     ]}
                   ></Tile>
                 </div>
