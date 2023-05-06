@@ -17,7 +17,7 @@
     "paths": {
       "~/*": ["src/*"]
     },
-    "types": ["@vueuse/core", "@catppuccin/palette"]
+    "types": ["@vueuse/core", "@catppuccin/palette", "vuetify"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

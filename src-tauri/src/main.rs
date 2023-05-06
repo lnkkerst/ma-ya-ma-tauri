@@ -40,6 +40,11 @@ fn get_score() -> i32 {
     ffi::get_score()
 }
 
+#[tauri::command]
+fn get_builtin_level_list() -> Vec<String> {
+    level::get_builtin_levels()
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -48,7 +53,8 @@ fn main() {
             load_level_from_builtin,
             load_theme_from_builtin,
             get_status,
-            get_score
+            get_score,
+            get_builtin_level_list
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

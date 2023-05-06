@@ -1,5 +1,5 @@
 import { useWindowSize } from '@vueuse/core';
-import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+import { Suspense, computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { RouterView } from 'vue-router';
 
 // @ts-expect-error no declaration file
@@ -14,12 +14,7 @@ export default defineComponent({
     const { width: windowWidth, height: windowHeight } = useWindowSize();
 
     const el = ref<HTMLDivElement | null>(null);
-    const scale = computed(() =>
-      Math.min(
-        windowWidth.value / appSize.width,
-        windowHeight.value / appSize.height
-      )
-    );
+    const scale = computed(() => Math.min(windowWidth.value / appSize.width, windowHeight.value / appSize.height));
     let cn: CanvasNest | null = null;
 
     onMounted(() => {
@@ -48,22 +43,30 @@ export default defineComponent({
     });
 
     return () => (
-      <div relative grid place-items="center" w="screen" h="screen" bg="black">
-        <div
-          ref={el}
-          bg-latte-base
-          z="0"
-          absolute
-          style={{
-            height: `${appSize.height * scale.value}px`,
-            width: `${appSize.width * scale.value}px`,
-            aspectRatio: '9 / 16'
-          }}
-          select-none
-        >
-          <RouterView></RouterView>
-        </div>
-      </div>
+      // @ts-expect-error: why?
+      <Suspense>
+        {{
+          default: () => (
+            <div relative grid place-items="center" w="screen" h="screen" bg="black">
+              <div
+                ref={el}
+                bg-latte-base
+                z="0"
+                absolute
+                style={{
+                  height: `${appSize.height * scale.value}px`,
+                  width: `${appSize.width * scale.value}px`,
+                  aspectRatio: '9 / 16'
+                }}
+                select-none
+              >
+                <RouterView></RouterView>
+              </div>
+            </div>
+          ),
+          fallback: () => <div>loading...</div>
+        }}
+      </Suspense>
     );
   }
 });
