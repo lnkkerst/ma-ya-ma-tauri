@@ -1,5 +1,12 @@
 import { useWindowSize } from '@vueuse/core';
-import { Suspense, computed, defineComponent, onMounted, ref, watch } from 'vue';
+import {
+  Suspense,
+  computed,
+  defineComponent,
+  onMounted,
+  ref,
+  watch
+} from 'vue';
 import { RouterView } from 'vue-router';
 
 // @ts-expect-error no declaration file
@@ -14,7 +21,12 @@ export default defineComponent({
     const { width: windowWidth, height: windowHeight } = useWindowSize();
 
     const el = ref<HTMLDivElement | null>(null);
-    const scale = computed(() => Math.min(windowWidth.value / appSize.width, windowHeight.value / appSize.height));
+    const scale = computed(() =>
+      Math.min(
+        windowWidth.value / appSize.width,
+        windowHeight.value / appSize.height
+      )
+    );
     let cn: CanvasNest | null = null;
 
     onMounted(() => {
@@ -47,7 +59,14 @@ export default defineComponent({
       <Suspense>
         {{
           default: () => (
-            <div relative grid place-items="center" w="screen" h="screen" bg="black">
+            <div
+              relative
+              grid
+              place-items="center"
+              w="screen"
+              h="screen"
+              bg="black"
+            >
               <div
                 ref={el}
                 bg-latte-base

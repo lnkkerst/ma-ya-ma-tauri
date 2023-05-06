@@ -2,7 +2,15 @@ import { invoke } from '@tauri-apps/api';
 import { defineComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { gsap } from 'gsap';
-import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VDialog, VTextField } from 'vuetify/components';
+import {
+  VBtn,
+  VCard,
+  VCardActions,
+  VCardText,
+  VCardTitle,
+  VDialog,
+  VTextField
+} from 'vuetify/components';
 import Board from '~/components/Board';
 import useGameState from '~/state/game';
 import type { Tile } from '~/types';
@@ -16,7 +24,10 @@ export default defineComponent({
     const gameState = useGameState();
     const scoreEl = ref<HTMLDivElement | null>(null);
     const endDialog = ref(false);
-    const name = ref({ content: '', rules: [(v: string) => !!v || '必须提供名字'] });
+    const name = ref({
+      content: '',
+      rules: [(v: string) => !!v || '必须提供名字']
+    });
 
     await invoke('load_theme_from_builtin', { themeName: 'default' });
     gameState.value.tiles = (await invoke('load_level_from_builtin', {
@@ -55,9 +66,21 @@ export default defineComponent({
       <div>
         <div absolute top="1/50" right="1/20">
           {/* @ts-expect-error: why? */}
-          <VBtn icon="mdi-home" variant="text" onClick={() => router.push('/')}></VBtn>
+          <VBtn
+            icon="mdi-home"
+            variant="text"
+            onClick={() => router.push('/')}
+          ></VBtn>
         </div>
-        <div absolute cursor="default" top="2/100" left="4/100" ref={scoreEl} font="bold" style={{ fontSize: '2vh' }}>{`得分：${gameState.value.score}`}</div>
+        <div
+          absolute
+          cursor="default"
+          top="2/100"
+          left="4/100"
+          ref={scoreEl}
+          font="bold"
+          style={{ fontSize: '2vh' }}
+        >{`得分：${gameState.value.score}`}</div>
         <VDialog v-model={endDialog.value} select-none persistent>
           {
             {
@@ -87,7 +110,11 @@ export default defineComponent({
                   <VCardText mx-auto>
                     <p>{`最终得分：${gameState.value.score}`}</p>
                     <div>
-                      <VTextField v-model={name.value.content} label="输入昵称 😎" rules={name.value.rules}></VTextField>
+                      <VTextField
+                        v-model={name.value.content}
+                        label="输入昵称 😎"
+                        rules={name.value.rules}
+                      ></VTextField>
                       {/* @ts-expect-error: why? */}
                       <VBtn onClick={handleSaveScore}>保存成绩</VBtn>
                     </div>
@@ -96,7 +123,9 @@ export default defineComponent({
               ),
               [GameStatus.Running]: (
                 <VCard>
-                  <VCardTitle class={['mx-auto']}>你好像来了不该来的地方 😿</VCardTitle>
+                  <VCardTitle class={['mx-auto']}>
+                    你好像来了不该来的地方 😿
+                  </VCardTitle>
                   <VCardText></VCardText>
                 </VCard>
               )
