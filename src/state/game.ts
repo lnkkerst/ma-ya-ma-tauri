@@ -8,6 +8,7 @@ export interface GameState {
   score: number;
   status: 'preparing' | 'running' | 'win' | 'lose';
   tilesMap: Record<string, Tile>;
+  movingTile: string;
 }
 
 const gameState = ref<GameState>({
@@ -16,7 +17,8 @@ const gameState = ref<GameState>({
   board: [],
   tiles: [],
   buffer: [],
-  tilesMap: {}
+  tilesMap: {},
+  movingTile: ''
 });
 
 export default function useGameState() {

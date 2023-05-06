@@ -59,6 +59,7 @@ export default defineComponent({
             width: `${appSize.width * scale.value}px`,
             aspectRatio: '9 / 16'
           }}
+          select-none
         >
           <RouterView></RouterView>
         </div>

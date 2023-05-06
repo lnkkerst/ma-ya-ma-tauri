@@ -71,10 +71,12 @@ pub mod ffi {
         diffs: Vec<TileDiff>,
     }
 
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     enum GameEvent {
         ClickTile,
     }
 
+    #[derive(Debug, Deserialize, Serialize, Clone)]
     enum GameStatus {
         Running,
         Winned,
@@ -92,5 +94,6 @@ pub mod ffi {
         fn get_tiles() -> Tiles;
         fn init_game() -> ();
         fn handle_click_tile(tile: &Tile) -> UniquePtr<ClickTileResult>;
+        fn get_score() -> i32;
     }
 }
