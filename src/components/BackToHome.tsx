@@ -8,7 +8,12 @@ export default defineComponent({
     return () => (
       <div>
         {/* @ts-expect-error: why? */}
-        <VBtn icon="mdi-home" variant="text" size="x-large" onClick={() => router.push('/')}></VBtn>
+        <VBtn
+          icon="mdi-home"
+          variant="text"
+          size="x-large"
+          onClick={() => router.push('/')}
+        ></VBtn>
       </div>
     );
   }

@@ -10,7 +10,9 @@ export default defineComponent({
     const levels = ref<string[]>([]);
 
     onMounted(async () => {
-      levels.value = ((await invoke('get_builtin_level_list')) as string[]).sort((a, b) => parseInt(a) - parseInt(b));
+      levels.value = (
+        (await invoke('get_builtin_level_list')) as string[]
+      ).sort((a, b) => parseInt(a) - parseInt(b));
     });
 
     return () => (
@@ -20,7 +22,10 @@ export default defineComponent({
         </div>
         <div grid grid-cols-4>
           {levels.value.map(level => (
-            <div p="1/10" onClick={() => router.push({ path: '/game', query: { level } })}>
+            <div
+              p="1/10"
+              onClick={() => router.push({ path: '/game', query: { level } })}
+            >
               <Tile text={level} font-size="200%"></Tile>
             </div>
           ))}

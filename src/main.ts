@@ -34,4 +34,9 @@ const vuetify = createVuetify({
   }
 });
 
-createApp(App).use(head).use(router).use(MotionPlugin).use(vuetify).mount('#app');
+createApp(App)
+  .use(head)
+  .use(router)
+  .use(MotionPlugin)
+  .use(vuetify)
+  .mount('#app');
