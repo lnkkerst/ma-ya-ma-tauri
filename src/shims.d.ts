@@ -6,7 +6,9 @@ type ExtraUnocssAttributifyName =
   | 'duration'
   | 'transition'
   | 'left'
-  | 'right';
+  | 'right'
+  | 'top'
+  | 'bottom';
 
 declare module '@vue/runtime-dom' {
   interface HTMLAttributes extends AttributifyAttributes {}

@@ -14,10 +14,12 @@ public:
   ~TileDiffList();
 
   void push_back(const TileDiff &diff);
-  void push_back(const std::string &id, const std::string &field, int value);
+  void push_back(const std::string &id, const std::string &field, int value,
+                 int delay = 0);
   void push_back(const std::string &id, const std::string &field,
-                 std::string &value);
-  void push_back(const std::string &id, const std::string &field, bool value);
+                 std::string &value, int delay = 0);
+  void push_back(const std::string &id, const std::string &field, bool value,
+                 int delay = 0);
   void clear();
 
   std::vector<TileDiff> send();
