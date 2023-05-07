@@ -1,17 +1,18 @@
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { VBtn } from 'vuetify/components';
 
 export default defineComponent({
   setup() {
     const router = useRouter();
+    const route = useRoute();
     return () => (
-      <div absolute top="1/100" right="1/50">
+      <div absolute top="1/100" right="15/100">
         <VBtn
-          icon="mdi-home"
+          icon="mdi-refresh"
           variant="text"
           size="x-large"
-          onClick={() => router.push('/')}
+          onClick={() => location.reload()}
         ></VBtn>
       </div>
     );

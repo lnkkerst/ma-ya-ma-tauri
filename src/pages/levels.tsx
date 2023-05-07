@@ -1,13 +1,17 @@
 import { invoke } from '@tauri-apps/api';
 import { defineComponent, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import BackToHome from '~/components/BackToHome';
 import Tile from '~/components/Tile';
+import useWindowScale from '~/composables/windowScale';
 
 export default defineComponent({
   setup() {
+    const route = useRoute();
     const router = useRouter();
+    const scale = useWindowScale();
     const levels = ref<string[]>([]);
+    const redirect = (route.query.redirect as string) ?? '/records';
 
     onMounted(async () => {
       levels.value = (
@@ -20,17 +24,25 @@ export default defineComponent({
         <div font="bold" text="3vh" mx-auto text-center>
           选择关卡
         </div>
-        <div grid grid-cols-4>
+        <div
+          grid
+          grid-cols-4
+          style={{
+            margin: `${scale.value * 16}px ${scale.value * 32}px`,
+            height: `${scale.value * 960}px`
+          }}
+          overflow-y-auto
+        >
           {levels.value.map(level => (
             <div
-              p="1/10"
-              onClick={() => router.push({ path: '/game', query: { level } })}
+              style={{ padding: `${scale.value * 16}px` }}
+              onClick={() => router.push({ path: redirect, query: { level } })}
             >
-              <Tile text={level} font-size="200%"></Tile>
+              <Tile cursor-pointer text={level} font-size="200%"></Tile>
             </div>
           ))}
         </div>
-        <BackToHome class={['absolute', 'right-1/25', 'top-1/50']}></BackToHome>
+        <BackToHome></BackToHome>
       </div>
     );
   }

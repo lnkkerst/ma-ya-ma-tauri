@@ -15,12 +15,17 @@ import Board from '~/components/Board';
 import useGameState from '~/state/game';
 import type { Tile } from '~/types';
 import { GameStatus } from '~/types';
+import BackToHome from '~/components/BackToHome';
+import { addRecord } from '~/utils';
+import useWindowScale from '~/composables/windowScale';
+import Refresh from '~/components/Refresh';
 
 export default defineComponent({
   async setup() {
     const route = useRoute();
     const router = useRouter();
-    const levelName = route.query.level || '1';
+    const scale = useWindowScale();
+    const levelName = (route.query.level as string) || '1';
     const gameState = useGameState();
     const scoreEl = ref<HTMLDivElement | null>(null);
     const endDialog = ref(false);
@@ -28,6 +33,7 @@ export default defineComponent({
       content: '',
       rules: [(v: string) => !!v || '必须提供名字']
     });
+    const loading = ref(false);
 
     await invoke('load_theme_from_builtin', { themeName: 'default' });
     gameState.value.tiles = (await invoke('load_level_from_builtin', {
@@ -62,16 +68,23 @@ export default defineComponent({
       }
     }
 
+    async function handleAddRecord() {
+      if (!name.value.content) {
+        return;
+      }
+      loading.value = true;
+      await addRecord(levelName, {
+        name: name.value.content,
+        score: gameState.value.score
+      });
+      loading.value = false;
+      router.push({ path: '/records', query: { level: levelName } });
+    }
+
     return () => (
       <div>
-        <div absolute top="1/50" right="1/20">
-          {/* @ts-expect-error: why? */}
-          <VBtn
-            icon="mdi-home"
-            variant="text"
-            onClick={() => router.push('/')}
-          ></VBtn>
-        </div>
+        <BackToHome></BackToHome>
+        <Refresh></Refresh>
         <div
           absolute
           cursor="default"
@@ -85,7 +98,7 @@ export default defineComponent({
           {
             {
               [GameStatus.Losed]: (
-                <VCard>
+                <VCard style={{ maxWidth: `${scale.value * 480}px` }} mx-auto>
                   <VCardTitle class={['mx-auto']} cursor-default>
                     你输了喵 😜
                   </VCardTitle>
@@ -93,11 +106,9 @@ export default defineComponent({
                     {`最终得分 ${gameState.value.score} 分，然而并没有什么卵用 😢`}
                   </VCardText>
                   <VCardActions mx-auto>
-                    {/* @ts-expect-error: why? */}
                     <VBtn variant="tonal" onClick={() => router.push('/')}>
                       返回主菜单
                     </VBtn>
-                    {/* @ts-expect-error: why? */}
                     <VBtn variant="tonal" onClick={() => location.reload()}>
                       再来一次
                     </VBtn>
@@ -105,24 +116,31 @@ export default defineComponent({
                 </VCard>
               ),
               [GameStatus.Winned]: (
-                <VCard>
+                <VCard style={{ maxWidth: `${scale.value * 480}px` }} mx-auto>
                   <VCardTitle class={['mx-auto']}>你赢了！🎉 </VCardTitle>
                   <VCardText mx-auto>
-                    <p>{`最终得分：${gameState.value.score}`}</p>
+                    <p my-1>{`最终得分：${gameState.value.score}`}</p>
                     <div>
                       <VTextField
                         v-model={name.value.content}
+                        variant="outlined"
+                        density="compact"
                         label="输入昵称 😎"
                         rules={name.value.rules}
                       ></VTextField>
-                      {/* @ts-expect-error: why? */}
-                      <VBtn onClick={handleSaveScore}>保存成绩</VBtn>
+                      <VBtn
+                        variant="tonal"
+                        loading={loading.value}
+                        onClick={handleAddRecord}
+                      >
+                        保存成绩
+                      </VBtn>
                     </div>
                   </VCardText>
                 </VCard>
               ),
               [GameStatus.Running]: (
-                <VCard>
+                <VCard style={{ maxWidth: `${scale.value * 480}px` }} mx-auto>
                   <VCardTitle class={['mx-auto']}>
                     你好像来了不该来的地方 😿
                   </VCardTitle>
