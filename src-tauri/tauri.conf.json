@@ -38,7 +38,12 @@
         "icons/icon.ico"
       ],
       "identifier": "me.lnkkerst.mayama",
-      "targets": "all"
+      "targets": "all",
+      "windows": {
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        }
+      }
     },
     "security": {
       "csp": null
