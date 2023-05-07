@@ -56,47 +56,48 @@ export default defineComponent({
     });
 
     return () => (
-      <Suspense>
-        {{
-          default: () => (
-            <div
-              relative
-              flex
-              justify-center
-              items-center
-              w="screen"
-              h="screen"
-              bg="black"
-            >
+      <div relative ref={el}>
+        <Suspense>
+          {{
+            default: () => (
               <div
-                ref={el}
-                bg-latte-base
-                z="0"
-                absolute
-                overflow-hidden
-                style={{
-                  height: `${appSize.height * scale.value}px`,
-                  width: `${appSize.width * scale.value}px`,
-                  aspectRatio: '9 / 16'
-                }}
-                select-none
+                relative
+                flex
+                justify-center
+                items-center
+                w="screen"
+                h="screen"
+                bg="black"
               >
-                {/* <RouterView> */}
-                {/*   {{ */}
-                {/*     default: ({ Component }) => ( */}
-                {/*       <Transition name="page">{Component}</Transition> */}
-                {/*     ) */}
-                {/*   }} */}
-                {/* </RouterView> */}
-                <Transition name="page">
-                  <RouterView></RouterView>
-                </Transition>
+                <div
+                  bg-latte-base
+                  z="0"
+                  absolute
+                  overflow-hidden
+                  style={{
+                    height: `${appSize.height * scale.value}px`,
+                    width: `${appSize.width * scale.value}px`,
+                    aspectRatio: '9 / 16'
+                  }}
+                  select-none
+                >
+                  {/* <RouterView> */}
+                  {/*   {{ */}
+                  {/*     default: ({ Component }) => ( */}
+                  {/*       <Transition name="page">{Component}</Transition> */}
+                  {/*     ) */}
+                  {/*   }} */}
+                  {/* </RouterView> */}
+                  <Transition name="page">
+                    <RouterView></RouterView>
+                  </Transition>
+                </div>
               </div>
-            </div>
-          ),
-          fallback: () => <div>loading...</div>
-        }}
-      </Suspense>
+            ),
+            fallback: () => <div>loading...</div>
+          }}
+        </Suspense>
+      </div>
     );
   }
 });
