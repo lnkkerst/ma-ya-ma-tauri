@@ -47,7 +47,6 @@ export default defineComponent({
       <div relative>
         <div aspect-square w="9/10" mx="auto" mt="1/5">
           {gameState.value.tiles.map(tile => (
-            // @ts-expect-error: why?
             <Transition name="tile-bounce">
               {!tile.dropped ? (
                 <div
@@ -89,7 +88,7 @@ export default defineComponent({
                       'duration-100',
                       'h-100/80',
                       'w-100/80',
-                      styles['tile-svg']
+                      { [styles['tile-svg-scale']]: tile.exposed }
                     ]}
                   ></Tile>
                 </div>

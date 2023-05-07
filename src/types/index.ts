@@ -26,3 +26,8 @@ export enum GameStatus {
   Winned,
   Losed
 }
+
+export interface GameRecord {
+  name: string;
+  score: number;
+}

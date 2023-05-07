@@ -20,6 +20,8 @@ add_custom_command(
   OUTPUT ${CXXBRIDGE_DIR}/src/lib.rs.cc
   COMMAND cxxbridge ${CARGO_SOURCE_DIR}/src/lib.rs >
           ${CXXBRIDGE_DIR}/src/lib.rs.cc
+  COMMAND cxxbridge ${CARGO_SOURCE_DIR}/src/lib.rs --header >
+          ${CXXBRIDGE_DIR}/src/lib.rs.h
   DEPENDS ${CARGO_SOURCE_DIR}/src/lib.rs
   USES_TERMINAL
   COMMENT "Bridging src/lib.rs...")

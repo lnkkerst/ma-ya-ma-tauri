@@ -1,9 +1,9 @@
-import { useWindowSize } from '@vueuse/core';
 import {
   Suspense,
-  computed,
+  Transition,
   defineComponent,
   onMounted,
+  onUnmounted,
   ref,
   watch
 } from 'vue';
@@ -14,19 +14,14 @@ import CanvasNest from 'canvas-nest.js';
 import { variants } from '@catppuccin/palette';
 import { appSize } from '~/consts';
 import { useAppConfig } from '~/state/config';
+import useWindowScale from '~/composables/windowScale';
 
 export default defineComponent({
   setup() {
     const appConfig = useAppConfig();
-    const { width: windowWidth, height: windowHeight } = useWindowSize();
 
     const el = ref<HTMLDivElement | null>(null);
-    const scale = computed(() =>
-      Math.min(
-        windowWidth.value / appSize.width,
-        windowHeight.value / appSize.height
-      )
-    );
+    const scale = useWindowScale();
     let cn: CanvasNest | null = null;
 
     onMounted(() => {
@@ -54,15 +49,21 @@ export default defineComponent({
       );
     });
 
+    onUnmounted(() => {
+      if (cn) {
+        cn.destory();
+      }
+    });
+
     return () => (
-      // @ts-expect-error: why?
       <Suspense>
         {{
           default: () => (
             <div
               relative
-              grid
-              place-items="center"
+              flex
+              justify-center
+              items-center
               w="screen"
               h="screen"
               bg="black"
@@ -72,6 +73,7 @@ export default defineComponent({
                 bg-latte-base
                 z="0"
                 absolute
+                overflow-hidden
                 style={{
                   height: `${appSize.height * scale.value}px`,
                   width: `${appSize.width * scale.value}px`,
@@ -79,7 +81,16 @@ export default defineComponent({
                 }}
                 select-none
               >
-                <RouterView></RouterView>
+                {/* <RouterView> */}
+                {/*   {{ */}
+                {/*     default: ({ Component }) => ( */}
+                {/*       <Transition name="page">{Component}</Transition> */}
+                {/*     ) */}
+                {/*   }} */}
+                {/* </RouterView> */}
+                <Transition name="page">
+                  <RouterView></RouterView>
+                </Transition>
               </div>
             </div>
           ),
