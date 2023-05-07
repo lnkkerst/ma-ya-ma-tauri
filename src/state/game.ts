@@ -10,6 +10,7 @@ export interface GameState {
   status: GameStatus;
   tilesMap: Record<string, Tile>;
   movingTile: string;
+  customLevel: { tiles: Tile[] } | undefined;
 }
 
 const gameState = ref<GameState>({
@@ -19,7 +20,8 @@ const gameState = ref<GameState>({
   tiles: [],
   buffer: [],
   tilesMap: {},
-  movingTile: ''
+  movingTile: '',
+  customLevel: undefined
 });
 
 export default function useGameState() {

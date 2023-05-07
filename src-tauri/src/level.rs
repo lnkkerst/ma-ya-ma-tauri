@@ -4,6 +4,12 @@ static BUILTIN_LEVELS: phf::Map<&'static str, &'static str> = phf::phf_map! {
     "1" => include_str!("../resources/levels/1.json"),
     "2" => include_str!("../resources/levels/2.json"),
     "3" => include_str!("../resources/levels/3.json"),
+    "4" => include_str!("../resources/levels/4.json"),
+    "5" => include_str!("../resources/levels/5.json"),
+    "6" => include_str!("../resources/levels/6.json"),
+    "7" => include_str!("../resources/levels/7.json"),
+    "8" => include_str!("../resources/levels/8.json"),
+    "9" => include_str!("../resources/levels/9.json"),
 };
 
 impl PreLevel {

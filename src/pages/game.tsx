@@ -36,9 +36,13 @@ export default defineComponent({
     const loading = ref(false);
 
     await invoke('load_theme_from_builtin', { themeName: 'default' });
-    gameState.value.tiles = (await invoke('load_level_from_builtin', {
-      levelName
-    })) as Tile[];
+    if (levelName === 'custom') {
+      gameState.value.tiles = [...(gameState.value.customLevel?.tiles ?? [])];
+    } else {
+      gameState.value.tiles = (await invoke('load_level_from_builtin', {
+        levelName
+      })) as Tile[];
+    }
     gameState.value.tiles.forEach(tile => {
       gameState.value.tilesMap[tile.id] = tile;
     });
@@ -84,7 +88,7 @@ export default defineComponent({
     return () => (
       <div>
         <BackToHome></BackToHome>
-        <Refresh></Refresh>
+        {levelName !== 'custom' ? <Refresh></Refresh> : undefined}
         <div
           absolute
           cursor="default"
@@ -109,9 +113,11 @@ export default defineComponent({
                     <VBtn variant="tonal" onClick={() => router.push('/')}>
                       返回主菜单
                     </VBtn>
-                    <VBtn variant="tonal" onClick={() => location.reload()}>
-                      再来一次
-                    </VBtn>
+                    {levelName !== 'custom' ? (
+                      <VBtn variant="tonal" onClick={() => location.reload()}>
+                        再来一次
+                      </VBtn>
+                    ) : undefined}
                   </VCardActions>
                 </VCard>
               ),
@@ -120,22 +126,24 @@ export default defineComponent({
                   <VCardTitle class={['mx-auto']}>你赢了！🎉 </VCardTitle>
                   <VCardText mx-auto>
                     <p my-1>{`最终得分：${gameState.value.score}`}</p>
-                    <div>
-                      <VTextField
-                        v-model={name.value.content}
-                        variant="outlined"
-                        density="compact"
-                        label="输入昵称 😎"
-                        rules={name.value.rules}
-                      ></VTextField>
-                      <VBtn
-                        variant="tonal"
-                        loading={loading.value}
-                        onClick={handleAddRecord}
-                      >
-                        保存成绩
-                      </VBtn>
-                    </div>
+                    {levelName !== 'custom' ? (
+                      <div>
+                        <VTextField
+                          v-model={name.value.content}
+                          variant="outlined"
+                          density="compact"
+                          label="输入昵称 😎"
+                          rules={name.value.rules}
+                        ></VTextField>
+                        <VBtn
+                          variant="tonal"
+                          loading={loading.value}
+                          onClick={handleAddRecord}
+                        >
+                          保存成绩
+                        </VBtn>
+                      </div>
+                    ) : undefined}
                   </VCardText>
                 </VCard>
               ),

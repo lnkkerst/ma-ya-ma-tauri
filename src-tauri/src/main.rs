@@ -24,6 +24,13 @@ fn load_level_from_builtin(level_name: String) -> Result<Vec<ffi::Tile>, String>
 }
 
 #[tauri::command]
+fn load_level_from_custom(pre_level: level::PreLevel) -> Result<Vec<ffi::Tile>, String> {
+    ffi::load_tiles(&pre_level);
+    ffi::init_game();
+    Ok(ffi::get_tiles().value)
+}
+
+#[tauri::command]
 fn load_theme_from_builtin(theme_name: String) -> Result<(), String> {
     let theme = theme::Theme::from_builtin(&theme_name).map_err(|_e| "Failed to load theme")?;
     ffi::load_theme(&theme);
@@ -54,7 +61,8 @@ fn main() {
             load_theme_from_builtin,
             get_status,
             get_score,
-            get_builtin_level_list
+            get_builtin_level_list,
+            load_level_from_custom
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
