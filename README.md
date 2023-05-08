@@ -25,6 +25,12 @@ pnpm i
 
 需要事先安装好 CMake。
 
+还有 cxxbridge。
+
+```bash
+cargo install --force cxxbridge-cli
+```
+
 仅在 Linux(Arch distro) 上测试过，其它平台大概率失败。
 
 构建：
