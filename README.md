@@ -28,7 +28,7 @@ pnpm i
 还有 cxxbridge。
 
 ```bash
-cargo install --force cxxbridge-cli
+cargo install --force cxxbridge-cmd
 ```
 
 仅在 Linux(Arch distro) 上测试过，其它平台大概率失败。

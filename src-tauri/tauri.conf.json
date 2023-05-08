@@ -26,6 +26,9 @@
       },
       "dialog": {
         "all": true
+      },
+      "window": {
+        "all": true
       }
     },
     "bundle": {
