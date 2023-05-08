@@ -16,6 +16,7 @@
 void Game::load_tiles(const PreLevel &level) {
   this->pre_tiles.clear();
   this->pre_tiles.reserve(level.tiles.size());
+
   for (const auto &pre_tile : level.tiles) {
     this->pre_tiles.emplace_back(pre_tile);
   }
@@ -29,9 +30,11 @@ GameStatus Game::get_status() const noexcept { return this->status; }
 
 rust::Vec<Tile> Game::get_tiles() const {
   rust::Vec<Tile> res;
+
   for (const auto &tile : this->tiles) {
     res.emplace_back(*tile);
   }
+
   return res;
 }
 
@@ -70,19 +73,23 @@ void Game::init_game() {
     tile.id = id;
 
     auto tile_ptr = std::make_shared<Tile>(tile);
+
     this->tiles.emplace_back(tile_ptr);
     this->tiles_map[id] = tile_ptr;
+
     if (tile_ptr->on_buffer) {
       this->buf_tiles.emplace_back(tile_ptr);
     } else {
       this->board_tiles.emplace_back(tile_ptr);
       this->board_tiles_set.insert(std::string(tile_ptr->id));
     }
+
     this->shield_tree.insert(*tile_ptr);
     tile_ptr->exposed = this->shield_tree.check_exposed(*tile_ptr);
   }
 
   this->status = GameStatus::Running;
+
   this->shield_tree.init();
   this->build_shield();
   this->tile_diffs.send();
@@ -109,6 +116,9 @@ std::unique_ptr<ClickTileResult> Game::handle_click_tile(const Tile &ori_tile) {
     this->clear_selected();
   }
 
+  // TODO: perf
+  this->arrange_buf_tiles(450);
+
   if (this->buf_tiles.size() >= 7) {
     this->status = GameStatus::Losed;
   }
@@ -121,6 +131,7 @@ std::unique_ptr<ClickTileResult> Game::handle_click_tile(const Tile &ori_tile) {
           return;
         }
       }
+
       this->status = GameStatus::Winned;
     }();
   }
@@ -160,6 +171,8 @@ void Game::handle_click_board_tile(const Tile &_tile) {
     return;
   }
   auto tile = it->second;
+
+  // 使用万能牌
   if (!this->selected_tiles_set.empty() && tile->keyword.type == "wildcard") {
     auto first_tile = this->tiles_map[*this->selected_tiles_set.begin()];
     if (first_tile->keyword.type == "wildcard") {
@@ -170,6 +183,7 @@ void Game::handle_click_board_tile(const Tile &_tile) {
     } else {
       this->drop_tile(tile);
       this->drop_tile(first_tile);
+      this->arrange_buf_tiles();
       this->score += 2;
     }
     return;
@@ -253,16 +267,19 @@ void Game::drop_paired_tiles() {
     auto key = std::string(i->keyword.content);
     auto &cnt = cnt_single[key];
     ++cnt;
+
     if (cnt == 3) {
       for (auto iit = this->buf_tiles.begin(); iit != this->buf_tiles.end();
            ++iit) {
         if ((*iit)->keyword.content != key) {
           continue;
         }
+
         (*iit)->dropped = true;
         this->tile_diffs.push_back(std::string((*iit)->id), "dropped", true,
                                    410);
       }
+
       auto itb = std::remove_if(this->buf_tiles.begin(), this->buf_tiles.end(),
                                 [&](const std::shared_ptr<Tile> &v) -> bool {
                                   return v->keyword.content == key;
@@ -278,6 +295,7 @@ void Game::drop_paired_tiles() {
   std::unordered_map<std::string, int> bk;
   std::vector<std::unordered_set<std::string>> cnt_groups(
       this->theme->groups.size());
+
   for (int i = 0; i < this->theme->groups.size(); ++i) {
     auto &group = this->theme->groups[i].contents;
     for (const auto &j : group) {
@@ -288,10 +306,12 @@ void Game::drop_paired_tiles() {
   for (const auto &tile : this->buf_tiles) {
     auto key = std::string(tile->keyword.content);
     if (bk.find(key) == bk.end()) {
-      return;
+      continue;
     }
+
     auto &cnt_group = cnt_groups[bk[key]];
     cnt_group.insert(key);
+
     if (cnt_group.size() == 2) {
       int cnt_del = 0;
       for (auto it = this->buf_tiles.begin();
@@ -305,14 +325,15 @@ void Game::drop_paired_tiles() {
           ++cnt_del;
         }
       }
+
       this->buf_tiles.erase(
           std::remove_if(this->buf_tiles.begin(), this->buf_tiles.end(),
                          [&](const std::shared_ptr<Tile> &v) -> bool {
                            return v->dropped;
                          }),
           this->buf_tiles.end());
-      this->arrange_buf_tiles(450);
 
+      this->arrange_buf_tiles(450);
       this->score += 2;
       return;
     }
@@ -350,7 +371,13 @@ void Game::drop_tile(std::shared_ptr<Tile> tile) {
     this->buf_tiles.erase(std::find_if(
         this->buf_tiles.begin(), this->buf_tiles.end(),
         [&](std::shared_ptr<Tile> v) -> bool { return v->id == tile->id; }));
+
   } else {
+    auto to_exposed = this->shield_tree.erase(*tile);
+    for (const auto &i : to_exposed) {
+      this->tile_diffs.push_back(i, "exposed", true);
+      this->tiles_map[i]->exposed = true;
+    }
     this->board_tiles_set.erase(std::string(tile->id));
   }
 }

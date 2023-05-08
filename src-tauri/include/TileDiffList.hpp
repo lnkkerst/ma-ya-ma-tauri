@@ -31,7 +31,6 @@ public:
    */
   void push_back(const std::string &id, const std::string &field, int value,
                  int delay = 0);
-
   /**
    * @brief 插入一组新变化
    *
